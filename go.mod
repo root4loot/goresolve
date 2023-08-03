@@ -4,7 +4,7 @@ go 1.20
 
 require (
 	github.com/projectdiscovery/gologger v1.1.11
-	github.com/root4loot/publicresolvers v0.0.0-20230607064706-1a0199fb9a25
+	github.com/root4loot/publicresolvers v0.0.0-20230803103850-be159fde208d
 )
 
 require (

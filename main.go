@@ -40,7 +40,7 @@ func DefaultOptions() *Options {
 	publicresolvers, err := publicresolvers.FetchResolversTrusted()
 	if err != nil {
 		// Use fallback resolvers
-		publicresolvers = []string{"8.8.8.8:53", "8.8.4.4:53", "208.67.222.222:53", "208.67.220.220:53"}
+		publicresolvers = []string{"8.8.8.8", "8.8.4.4", "208.67.222.222", "208.67.220.220"}
 	}
 
 	return &Options{
@@ -132,6 +132,7 @@ func (r *Runner) worker(host string) Result {
 
 	// Try each resolver until we get a response or exhaust all the resolvers
 	for _, resolver := range r.Options.Resolvers {
+		resolver = net.JoinHostPort(resolver, "53")
 		// Make DNS request
 		respV4, _, errV4 := c.Exchange(m.Copy(), resolver)
 		if errV4 != nil {
