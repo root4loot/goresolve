@@ -2,7 +2,7 @@
 
 # GoDNS
 
-GoDNS is a lightweight and easy-to-use Golang library that allows you to make DNS requests for single or multiple domains. It supports both IPv4 and IPv6 address resolutions and provides optional concurrency and timeout settings. GoDNS can also stream results using channels for efficient handling of large DNS resolution tasks.
+GoDNS is a lightweight Golang library that simplifies DNS requests for single or multiple domains. It supports both IPv4 and IPv6 address resolutions and provides optional concurrency and timeout settings. The library uses trusted resolvers from publicresolvers (https://github.com/root4loot/publicresolvers) for domain resolution and automatically falls back to Google and OpenDNS resolvers if needed. This enables reliable and efficient DNS resolution for various applications.
 
 ## Example
 ```
