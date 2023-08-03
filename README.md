@@ -26,6 +26,8 @@ func main() {
 	options.Timeout = 5
 	options.Delay = 0
 	options.DelayJitter = 0
+	options.Resolvers = []string{"208.67.222.222", "208.67.220.220"}
+	
 	r := godns.NewRunnerWithOptions(*options)
 
 	// Single domain
