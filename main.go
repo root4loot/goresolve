@@ -49,7 +49,7 @@ func DefaultOptions() *Options {
 		Delay:       0,
 		DelayJitter: 0,
 		Resolvers:   publicresolvers,
-		Protocol:    "tcp",
+		Protocol:    "udp",
 	}
 }
 
