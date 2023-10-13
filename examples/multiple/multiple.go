@@ -31,6 +31,6 @@ func main() {
 		} else {
 			fmt.Println("IPv6: None")
 		}
+		fmt.Println("Resolver:", result.ResolvedBy)
 	}
-
 }

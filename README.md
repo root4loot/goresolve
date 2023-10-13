@@ -46,6 +46,7 @@ func main() {
 	} else {
 		fmt.Println("IPv6: None")
 	}
+	fmt.Println("Resolver:", result.ResolvedBy)
 
 	// Multiple domains
 	fmt.Println("\nMultiple:")
@@ -63,6 +64,7 @@ func main() {
 		} else {
 			fmt.Println("IPv6: None")
 		}
+		fmt.Println("Resolver:", result.ResolvedBy)
 	}
 
 	// Multiple domains using channels
@@ -82,6 +84,7 @@ func main() {
 		} else {
 			fmt.Println("IPv6: None")
 		}
+		fmt.Println("Resolver:", result.ResolvedBy)
 	}
 }
 ```

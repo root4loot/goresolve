@@ -30,9 +30,10 @@ type Options struct {
 
 // Result contains the DNS resolution result for a domain.
 type Result struct {
-	Domain string
-	IPv4   []string
-	IPv6   []string
+	Domain     string
+	IPv4       []string
+	IPv6       []string
+	ResolvedBy string
 }
 
 // DefaultOptions returns default options
@@ -169,6 +170,8 @@ func (r *Runner) worker(host string) Result {
 
 		// Set the domain in the result
 		result.Domain = host
+		// Set the resolver used in the result
+		result.ResolvedBy = resolver
 
 		break // Got successful responses, no need to try other resolvers
 	}
