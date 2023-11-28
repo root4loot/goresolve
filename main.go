@@ -7,8 +7,7 @@ import (
 	"time"
 
 	"github.com/miekg/dns"
-	"github.com/projectdiscovery/gologger"
-	"github.com/projectdiscovery/gologger/levels"
+	"github.com/root4loot/goutils/log"
 	"github.com/root4loot/publicresolvers"
 )
 
@@ -34,6 +33,10 @@ type Result struct {
 	IPv4       []string
 	IPv6       []string
 	ResolvedBy string
+}
+
+func init() {
+	log.Init("godns")
 }
 
 // DefaultOptions returns default options
@@ -95,7 +98,9 @@ func (r *Runner) MultipleStream(results chan<- Result, host ...string) {
 	defer close(results)
 
 	if r.Options.Verbose {
-		gologger.DefaultLogger.SetMaxLevel(levels.LevelDebug)
+		log.SetLevel(log.DebugLevel)
+	} else {
+		log.SetLevel(log.InfoLevel)
 	}
 
 	sem := make(chan struct{}, r.Options.Concurrency)
@@ -116,6 +121,8 @@ func (r *Runner) MultipleStream(results chan<- Result, host ...string) {
 
 // worker is the worker that resolves a domain
 func (r *Runner) worker(host string) Result {
+	log.Debug("Resolving", host)
+
 	var result Result
 
 	dialer := &net.Dialer{
