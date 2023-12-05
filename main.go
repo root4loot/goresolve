@@ -79,9 +79,15 @@ func NewRunnerWithOptions(options Options) *Runner {
 }
 
 // Single resolves a single domain and returns the result
-func Single(host string) (result Result) {
-	r := NewRunner()
-	r.Options.Concurrency = 1
+func Single(host string, runner ...*Runner) (result Result) {
+	var r *Runner
+	if len(runner) > 0 {
+		// Use the provided runner
+		r = runner[0]
+	} else {
+		// No runner provided, create a default one
+		r = NewRunner()
+	}
 	return r.worker(host)
 }
 
@@ -100,7 +106,7 @@ func (r *Runner) Multiple(hosts []string) (results []Result) {
 		go func(h string) {
 			defer func() { <-sem }()
 			defer wg.Done()
-			results = append(results, r.worker(h))
+			results = append(results, Single(h))
 		}(host)
 	}
 
@@ -109,22 +115,30 @@ func (r *Runner) Multiple(hosts []string) (results []Result) {
 }
 
 // MultipleStream resolves multiple domains and streams the results using channels
-func (r *Runner) MultipleStream(results chan<- Result, host ...string) {
+func (r *Runner) MultipleStream(results chan<- Result, hosts ...string) {
 	defer close(results)
+
+	if r.Options.Verbose {
+		log.SetLevel(log.DebugLevel)
+	} else {
+		log.SetLevel(log.InfoLevel)
+	}
 
 	sem := make(chan struct{}, r.Options.Concurrency)
 	var wg sync.WaitGroup
-	for _, h := range host {
+
+	for _, host := range hosts {
 		sem <- struct{}{}
 		wg.Add(1)
-		go func(u string) {
+		go func(h string) {
 			defer func() { <-sem }()
 			defer wg.Done()
-			results <- r.worker(u)
+			results <- Single(h)
 			time.Sleep(time.Millisecond * 100) // make room for processing results
-		}(h)
+		}(host)
 		time.Sleep(r.getDelay() * time.Millisecond) // delay between requests
 	}
+
 	wg.Wait()
 }
 
