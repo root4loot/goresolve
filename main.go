@@ -8,6 +8,7 @@ import (
 
 	"github.com/miekg/dns"
 	"github.com/root4loot/goutils/log"
+	"github.com/root4loot/goutils/sliceutil"
 	"github.com/root4loot/publicresolvers"
 )
 
@@ -100,7 +101,7 @@ func (r *Runner) Multiple(hosts []string) (results []Result) {
 	sem := make(chan struct{}, r.Options.Concurrency)
 	var wg sync.WaitGroup
 
-	for _, host := range hosts {
+	for _, host := range sliceutil.Unique(hosts) {
 		wg.Add(1)
 		sem <- struct{}{}
 		go func(h string) {
@@ -127,7 +128,7 @@ func (r *Runner) MultipleStream(results chan<- Result, hosts ...string) {
 	sem := make(chan struct{}, r.Options.Concurrency)
 	var wg sync.WaitGroup
 
-	for _, host := range hosts {
+	for _, host := range sliceutil.Unique(hosts) {
 		sem <- struct{}{}
 		wg.Add(1)
 		go func(h string) {
