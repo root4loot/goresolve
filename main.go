@@ -60,6 +60,8 @@ func DefaultOptions() *Options {
 // NewRunner returns a new runner
 func NewRunner() *Runner {
 	options := DefaultOptions()
+	options.setLogLevel()
+
 	return &Runner{
 		Results: make(chan Result),
 		Options: *options,
@@ -68,6 +70,8 @@ func NewRunner() *Runner {
 
 // NewRunnerWithOptions returns a new runner with the specified options
 func NewRunnerWithOptions(options Options) *Runner {
+	options.setLogLevel()
+
 	return &Runner{
 		Results: make(chan Result),
 		Options: options,
@@ -107,12 +111,6 @@ func (r *Runner) Multiple(hosts []string) (results []Result) {
 // MultipleStream resolves multiple domains and streams the results using channels
 func (r *Runner) MultipleStream(results chan<- Result, host ...string) {
 	defer close(results)
-
-	if r.Options.Verbose {
-		log.SetLevel(log.DebugLevel)
-	} else {
-		log.SetLevel(log.InfoLevel)
-	}
 
 	sem := make(chan struct{}, r.Options.Concurrency)
 	var wg sync.WaitGroup
@@ -195,6 +193,15 @@ func (r *Runner) worker(host string) Result {
 	}
 
 	return result
+}
+
+// setLogLevel sets the log level
+func (o *Options) setLogLevel() {
+	if o.Verbose {
+		log.SetLevel(log.DebugLevel)
+	} else {
+		log.SetLevel(log.InfoLevel)
+	}
 }
 
 // getDelay returns a random delay between Delay and Delay+DelayJitter
