@@ -87,9 +87,20 @@ func (r *Runner) Multiple(hosts []string) (results []Result) {
 		r.Options.Concurrency = len(hosts)
 	}
 
+	sem := make(chan struct{}, r.Options.Concurrency)
+	var wg sync.WaitGroup
+
 	for _, host := range hosts {
-		results = append(results, r.worker(host))
+		wg.Add(1)
+		sem <- struct{}{}
+		go func(h string) {
+			defer func() { <-sem }()
+			defer wg.Done()
+			results = append(results, r.worker(h))
+		}(host)
 	}
+
+	wg.Wait()
 	return
 }
 
