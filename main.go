@@ -31,7 +31,7 @@ type Options struct {
 
 // Result contains the DNS resolution result for a domain.
 type Result struct {
-	Domain     string
+	Target     string
 	IPv4       []string
 	IPv6       []string
 	ResolvedBy string
@@ -202,7 +202,7 @@ func (r *Runner) worker(host string) Result {
 		}
 
 		// Set the domain in the result
-		result.Domain = host
+		result.Target = host
 		// Set the resolver used in the result
 		result.ResolvedBy = resolver
 
