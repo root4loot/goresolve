@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/miekg/dns"
+	"github.com/root4loot/goutils/domainutil"
 	"github.com/root4loot/goutils/log"
 	"github.com/root4loot/goutils/sliceutil"
 	"github.com/root4loot/publicresolvers"
@@ -89,6 +90,13 @@ func Single(host string, runner ...*Runner) (result Result) {
 		// No runner provided, create a default one
 		r = NewRunner()
 	}
+
+	// Check if the host is a valid domain
+	if !domainutil.IsHostname(removePort(host)) {
+		log.Error("Invalid hostname:", host)
+		return
+	}
+
 	return r.worker(host)
 }
 
@@ -118,12 +126,6 @@ func (r *Runner) Multiple(hosts []string) (results []Result) {
 // MultipleStream resolves multiple domains and streams the results using channels
 func (r *Runner) MultipleStream(results chan<- Result, hosts ...string) {
 	defer close(results)
-
-	if r.Options.Verbose {
-		log.SetLevel(log.DebugLevel)
-	} else {
-		log.SetLevel(log.InfoLevel)
-	}
 
 	sem := make(chan struct{}, r.Options.Concurrency)
 	var wg sync.WaitGroup
@@ -225,4 +227,14 @@ func (r *Runner) getDelay() time.Duration {
 		return time.Duration(r.Options.Delay + rand.Intn(r.Options.DelayJitter))
 	}
 	return time.Duration(r.Options.Delay)
+}
+
+func removePort(host string) string {
+	strippedHost, _, err := net.SplitHostPort(host)
+	if err != nil {
+		// Error indicates no port was present; return the original host
+		return host
+	}
+	// Port was present and successfully stripped
+	return strippedHost
 }
