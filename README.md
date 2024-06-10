@@ -2,7 +2,7 @@
 
 # goresolve
 
-Quickly resolve domains using reliable resolvers [publicresolvers](https://github.com/root4loot/publicresolvers)
+Quickly resolve domains using reliable resolvers ([publicresolvers](https://github.com/root4loot/publicresolvers))
 
 ## Example
 ```
