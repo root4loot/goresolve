@@ -1,4 +1,4 @@
-package godns
+package goresolve
 
 import (
 	"math/rand"
@@ -31,14 +31,14 @@ type Options struct {
 
 // Result contains the DNS resolution result for a domain.
 type Result struct {
-	Target     string
-	IPv4       []string
-	IPv6       []string
-	ResolvedBy string
+	TargetDomain string
+	IPv4         []string
+	IPv6         []string
+	ResolvedBy   string
 }
 
 func init() {
-	log.Init("godns")
+	log.Init("goresolve")
 }
 
 // DefaultOptions returns default options
@@ -202,7 +202,7 @@ func (r *Runner) worker(host string) Result {
 		}
 
 		// Set the domain in the result
-		result.Target = host
+		result.TargetDomain = host
 		// Set the resolver used in the result
 		result.ResolvedBy = resolver
 

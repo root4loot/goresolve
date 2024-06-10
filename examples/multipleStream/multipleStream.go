@@ -4,23 +4,23 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/root4loot/godns"
+	"github.com/root4loot/goresolve"
 )
 
 func main() {
-	options := godns.DefaultOptions()
+	options := goresolve.DefaultOptions()
 	options.Concurrency = 5
 	options.Timeout = 5
 	options.Delay = 0
 	options.DelayJitter = 0
 	options.Resolvers = []string{"208.67.222.222", "208.67.220.220"}
 
-	r := godns.NewRunnerWithOptions(*options)
+	r := goresolve.NewRunnerWithOptions(*options)
 
-	streamResults := make(chan godns.Result)
+	streamResults := make(chan goresolve.Result)
 	go r.MultipleStream(streamResults, "example.com", "google.com", "github.com")
 	for result := range streamResults {
-		fmt.Printf("Domain: %s\n", result.Domain)
+		fmt.Printf("Target Domain: %s\n", result.TargetDomain)
 		if len(result.IPv4) > 0 {
 			fmt.Printf("IPv4: %s\n", strings.Join(result.IPv4, ", "))
 		} else {

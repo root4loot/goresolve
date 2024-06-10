@@ -1,12 +1,12 @@
 ![Go version](https://img.shields.io/badge/Go-v1.19-blue.svg) [![Contribute](https://img.shields.io/badge/Contribute-Welcome-green.svg)](CONTRIBUTING.md)
 
-# GoDNS
+# goresolve
 
-GoDNS is a Go library for finding IP addresses of targets using reliable resolvers. It's fast, supports both IPv4 and IPv6, and allows for customizable search settings.
+Quickly resolve domains using reliable resolvers [publicresolvers](https://github.com/root4loot/publicresolvers)
 
 ## Example
 ```
-go get github.com/root4loot/godns@master
+go get github.com/root4loot/goresolve@master
 ```
 
 ```go
@@ -16,24 +16,24 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/root4loot/godns"
+	"github.com/root4loot/goresolve"
 )
 
 func main() {
 	// Options
-	options := godns.DefaultOptions()
+	options := goresolve.DefaultOptions()
 	options.Concurrency = 5
 	options.Timeout = 5
 	options.Delay = 0
 	options.DelayJitter = 0
 	options.Resolvers = []string{"208.67.222.222", "208.67.220.220"}
 	
-	r := godns.NewRunnerWithOptions(*options)
+	r := goresolve.NewRunnerWithOptions(*options)
 
 	// Single domain
 	fmt.Println("Single:")
 
-	result := godns.Single("example.com")
+	result := goresolve.Single("example.com")
 	fmt.Printf("Domain: %s\n", result.Domain)
 
 	if len(result.IPv4) > 0 {
@@ -70,7 +70,7 @@ func main() {
 	// Multiple domains using channels
 	fmt.Println("\nMultipleStream")
 
-	streamResults := make(chan godns.Result)
+	streamResults := make(chan goresolve.Result)
 	go r.MultipleStream(streamResults, "example.com", "google.com", "github.com")
 	for result := range streamResults {
 		fmt.Printf("Domain: %s\n", result.Domain)

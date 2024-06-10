@@ -1,4 +1,4 @@
-module github.com/root4loot/godns
+module github.com/root4loot/goresolve
 
 go 1.21.1
 

@@ -4,12 +4,12 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/root4loot/godns"
+	"github.com/root4loot/goresolve"
 )
 
 func main() {
-	result := godns.Single("example.com")
-	fmt.Printf("Domain: %s\n", result.Domain)
+	result := goresolve.Single("example.com")
+	fmt.Printf("Target Domain: %s\n", result.TargetDomain)
 
 	if len(result.IPv4) > 0 {
 		fmt.Printf("IPv4: %s\n", strings.Join(result.IPv4, ", "))
