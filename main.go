@@ -216,8 +216,6 @@ func (r *Runner) worker(host string) Result {
 func (o *Options) setLogLevel() {
 	if o.Verbose {
 		log.SetLevel(log.DebugLevel)
-	} else {
-		log.SetLevel(log.InfoLevel)
 	}
 }
 
